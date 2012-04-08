@@ -19,3 +19,7 @@ libraryDependencies += "org.scalaz" % "scalaz-core_2.9.1" % "6.0.4"
 libraryDependencies += "org.scalatest" %% "scalatest" % "1.7.1"
 
 libraryDependencies += "com.typesafe.akka" % "akka-actor" % "2.0"
+
+libraryDependencies += "joda-time" % "joda-time" % "2.1"
+
+libraryDependencies += "org.clapper" %% "grizzled-scala" % "1.0.12"
