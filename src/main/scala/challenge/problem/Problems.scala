@@ -7,7 +7,12 @@ package challenge.problem
  * whatever data it needs, and define the solve method which produces
  * the output stuck in the solved problem.
  */
-abstract case class Problem(val num: Int) {
+abstract case class Problem() {
+  /**
+   * Every problem requires a number for proper processing.  There can be no duplicates.
+   */
+  val num: Int
+
   /**
    * This must produce the answer to the problem
    */
