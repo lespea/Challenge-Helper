@@ -7,7 +7,7 @@ package challenge.problem
  * whatever data it needs, and define the solve method which produces
  * the output stuck in the solved problem.
  */
-abstract case class Problem() {
+abstract class Problem() {
   /**
    * Every problem requires a number for proper processing.  There can be no duplicates.
    */
