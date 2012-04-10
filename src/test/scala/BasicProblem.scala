@@ -8,7 +8,7 @@ import challenge.problem._
 class BasicProblem extends WordSpec with ShouldMatchers {
   def buildInfo(pInfo: List[Tuple3[Int, Int, Int]]) = {
     val (_, problems, answers) = pInfo.foldLeft(
-      new Tuple3[Int, problemList, answerMap](0, Nil, Map())){
+      new Tuple3[Int, List[AddProblem], Map[Int, String]](0, Nil, Map())){
         case ((num, pList, aMap), info) ⇒
           (
             num + 1,
@@ -34,9 +34,6 @@ class BasicProblem extends WordSpec with ShouldMatchers {
     (1, 2, 43),
     (123, 456, 9),
     (5, 6, 734))
-
-  type problemList = List[AddProblem]
-  type answerMap = Map[Int, String]
 
   val (okProblems, okAnswers) = buildInfo(okProblemInfo)
   val (badProblems, badAnswers) = buildInfo(badProblemInfo)
