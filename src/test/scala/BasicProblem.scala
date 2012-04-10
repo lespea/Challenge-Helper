@@ -48,7 +48,14 @@ class BasicProblem extends WordSpec with ShouldMatchers {
   master ! ProblemInfo(badProblems, badSolver)
 
   "A simple problem" should {
-    "solve correctly" in
+    "solve correctly" in {
       master ! ProcessProblem
+    }
+
+    "shutdown the actor system when it's finished" in {
+      Thread.sleep(1000)
+      master.isTerminated should be (true)
+      system.isTerminated should be (true)
+    }
   }
 }
