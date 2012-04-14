@@ -7,6 +7,7 @@ import scala.collection.mutable.MutableList
 import akka.actor.ActorSystem
 import scala.sys.Prop
 import akka.actor.Props
+import java.io.{ BufferedWriter, FileOutputStream, OutputStreamWriter }
 
 /**
  * This is the main trait that you need to implement to setup the problem runner.
@@ -22,13 +23,20 @@ abstract class Runner[A <: problem.Problem] extends App {
    * You must provide a function that takes a Seq of lines and turns it
    * into a Problem object.
    */
-  def linesToProblem(index: Int, strs: Seq[String]): A
+  def linesToProblem(strs: Seq[String]): A
 
   /**
    * How to process the solved problems
    */
-  val processResults: (Iterable[problem.SolvedProblem]) ⇒ Unit =
-    (problems) ⇒ problems mkString "\n"
+  def processResults(inFile: String): (Iterable[problem.SolvedProblem]) ⇒ Unit = (problems) ⇒ {
+    val outFile = inFile.replaceFirst("(?=[.][^.]+$)", "_solved")
+    withCloseable(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outFile), fileEncoding))) { buffOut ⇒
+      problems foreach { problem ⇒
+        buffOut.write(problem.toString)
+        buffOut.newLine
+      }
+    }
+  }
 
   /* Generic Options */
 
@@ -117,7 +125,6 @@ abstract class Runner[A <: problem.Problem] extends App {
            * in dynamic chunks
            */
           val problems: MutableList[A] = MutableList()
-          var index = 0
           while (lines.hasNext) {
             // Determine how to read the current problem's lines
             val (groupCount, countLine) =
@@ -133,12 +140,10 @@ abstract class Runner[A <: problem.Problem] extends App {
              * Parse the lines we got into a problem, make sure we include the "dynamic group"
              * line if requested!
              */
-            problems += linesToProblem(index,
-              countLine match {
-                case Some(line) ⇒ line +: groupLines
-                case _          ⇒ groupLines
-              })
-            index += 1
+            problems += linesToProblem(countLine match {
+              case Some(line) ⇒ line +: groupLines
+              case _          ⇒ groupLines
+            })
           }
 
           // Double check that we got the correct number of problems, if known
@@ -147,7 +152,7 @@ abstract class Runner[A <: problem.Problem] extends App {
               "Found %d problems instead of the expected %d".format(problems.length, problemCount.get))
 
           // Add the problem group to the actor system
-          pSolver addInfo problem.ProblemInfo(problems.toList, processResults)
+          pSolver addInfo problem.ProblemInfo(problems.toList, processResults(file))
         }
       }
     }
