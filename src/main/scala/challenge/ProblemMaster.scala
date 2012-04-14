@@ -23,6 +23,9 @@ case class ProblemMaster[A <: Problem](val workers: Int, selfTerminate: Boolean 
   // The problem sets that need solving
   var problems = mutable.Queue[ProblemInfo[A]]()
 
+  // If the problems are solved or not
+  var done = true
+
   def receive = {
     // Enqueue a new problem set
     case info: ProblemInfo[_] ⇒ problems enqueue info.asInstanceOf[ProblemInfo[A]]
@@ -30,7 +33,9 @@ case class ProblemMaster[A <: Problem](val workers: Int, selfTerminate: Boolean 
     // Process the next problem in the set
     case ProcessProblem ⇒ problems.headOption match {
       // There are no more problems to solve so shut down
-      case None ⇒ if (selfTerminate) context.system.shutdown
+      case None ⇒
+        done = true
+        if (selfTerminate) context.system.shutdown
 
       /*
        * Send out the problems to the workers and re-initialize the expected
@@ -47,6 +52,7 @@ case class ProblemMaster[A <: Problem](val workers: Int, selfTerminate: Boolean 
 
     // Add the solved problem to the results array
     case result: SolvedProblem ⇒
+      done = false
       val i = result.num
 
       // Make sure that we've never seen this answer before we update it
@@ -66,7 +72,9 @@ case class ProblemMaster[A <: Problem](val workers: Int, selfTerminate: Boolean 
       problems.dequeue.processResults(results)
       self ! ProcessProblem
 
+    case DoneProcessing ⇒ self ! done
+
     // Should never happen
-    case huh ⇒ throw new RuntimeException("Unknown message sent" + huh)
+    case huh            ⇒ throw new RuntimeException("Unknown message sent" + huh)
   }
 }
