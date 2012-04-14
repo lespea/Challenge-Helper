@@ -1,9 +1,9 @@
+package challenge
+
 import org.scalatest.WordSpec
 import org.scalatest.matchers.ShouldMatchers
-import testProblem._
 import akka.actor._
-import challenge._
-import challenge.problem._
+import problem._
 
 class BasicProblem extends WordSpec with ShouldMatchers {
   def buildInfo(pInfo: List[Tuple3[Int, Int, Int]]) =
