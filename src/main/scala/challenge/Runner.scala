@@ -93,16 +93,10 @@ abstract class Runner[A <: problem.Problem] extends App {
    */
   val files = if (args.length == 0) List(defaultInputFile) else args.toList
 
-  /* Actor System Setup */
-
   /**
-   * Bring up the actor system
+   * Object that maintains the actor system functionality
    */
-  val system = ActorSystem("ChallengeSystem")
-  /**
-   * This is the actor object responsible for managing the solver objects
-   */
-  val master = system.actorOf(Props(ProblemMaster[A](workers)), name = "problem_master")
+  val pSolver = new ProblemSolver[A](workers, true)
 
   /**
    * Main function that is run which loads all of the files, turns them into problem
@@ -153,7 +147,7 @@ abstract class Runner[A <: problem.Problem] extends App {
               "Found %d problems instead of the expected %d".format(problems.length, problemCount.get))
 
           // Add the problem group to the actor system
-          master ! problem.ProblemInfo(problems.toList, processResults)
+          pSolver addInfo problem.ProblemInfo(problems.toList, processResults)
         }
       }
     }
@@ -162,5 +156,5 @@ abstract class Runner[A <: problem.Problem] extends App {
    * Setup the problems and start the process
    */
   setupProblems
-  master ! problem.ProcessProblem
+  pSolver solve
 }
