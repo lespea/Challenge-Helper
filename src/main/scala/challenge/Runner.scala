@@ -30,12 +30,12 @@ abstract class Runner[A <: problem.Problem] extends App {
    */
   def processResults(inFile: String): (Iterable[problem.SolvedProblem]) ⇒ Unit = (problems) ⇒ {
     val outFile = inFile.replaceFirst("(?=[.][^.]+$)", "_solved")
-    withCloseable(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outFile), fileEncoding))) { buffOut ⇒
-      problems foreach { problem ⇒
-        buffOut.write(problem.toString)
-        buffOut.newLine
+    withCloseable(
+      new BufferedWriter(
+        new OutputStreamWriter(
+          new FileOutputStream(outFile), fileEncoding))) { buffOut ⇒
+        buffOut.write(problems mkString "\n")
       }
-    }
   }
 
   /* Generic Options */
