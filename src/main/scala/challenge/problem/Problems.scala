@@ -28,7 +28,7 @@ case class SolvedProblem(val num: Int, answer: String) {
   /**
    * Case #%d: %s
    */
-  override def toString = "Case #%d: %s".format(num, answer)
+  override def toString = "Case #%d: %s".format(num + 1, answer)
 }
 
 /**
