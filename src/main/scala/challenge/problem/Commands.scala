@@ -16,3 +16,8 @@ final case object ProcessProblem extends ProblemCommand
  * have been solved so the output should be generated and the next problem set solved.
  */
 final case object ProcessResults extends ProblemCommand
+
+/**
+ * Returns a boolean indicating if the problems have all been processed or not.
+ */
+final case object DoneProcessing extends ProblemCommand
