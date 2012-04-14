@@ -9,7 +9,7 @@ import scala.collection.mutable
  * Supervising actor that distributes the problems to the solvers, collects the
  * solutions, and processes the solved problems once they've all been computed.
  */
-case class ProblemMaster[A <: Problem](val workers: Int) extends Actor {
+case class ProblemMaster[A <: Problem](val workers: Int, selfTerminate: Boolean = true) extends Actor {
   // Setup the router to distribute the problems 
   val router = context.actorOf(
     Props[Solver].withRouter(SmallestMailboxRouter(workers)),
@@ -30,7 +30,7 @@ case class ProblemMaster[A <: Problem](val workers: Int) extends Actor {
     // Process the next problem in the set
     case ProcessProblem ⇒ problems.headOption match {
       // There are no more problems to solve so shut down
-      case None ⇒ context.system.shutdown
+      case None ⇒ if (selfTerminate) context.system.shutdown
 
       /*
        * Send out the problems to the workers and re-initialize the expected
