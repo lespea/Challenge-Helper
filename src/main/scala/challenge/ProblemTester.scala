@@ -1,4 +1,5 @@
 package challenge
+
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.WordSpec
 import challenge.problem.ProblemInfo
