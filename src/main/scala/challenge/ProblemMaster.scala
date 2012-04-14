@@ -72,7 +72,7 @@ case class ProblemMaster[A <: Problem](val workers: Int, selfTerminate: Boolean 
       problems.dequeue.processResults(results)
       self ! ProcessProblem
 
-    case DoneProcessing ⇒ self ! done
+    case DoneProcessing ⇒ sender ! done
 
     // Should never happen
     case huh            ⇒ throw new RuntimeException("Unknown message sent" + huh)
