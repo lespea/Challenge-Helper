@@ -12,7 +12,7 @@ class BasicProblem extends WordSpec with ShouldMatchers {
     pInfo.foldLeft(
       new (List[AddProblem], Map[Int, String])(Nil, Map())){
         case ((pList, aMap), info) ⇒
-          val problem = AddProblem(info._1, info._2, numGen())
+          val problem = AddProblem(info._1, info._2)
           (problem :: pList,
             aMap + (problem.num -> info._3.toString))
       }
