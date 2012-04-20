@@ -104,7 +104,7 @@ abstract class Runner[A <: problem.Problem] extends App {
   /**
    * Object that maintains the actor system functionality
    */
-  val pSolver = new ProblemSolver[A](workers, true)
+  val pSolver = new ProblemSolver[A](workers, true, "Runner")
 
   /**
    * Main function that is run which loads all of the files, turns them into problem

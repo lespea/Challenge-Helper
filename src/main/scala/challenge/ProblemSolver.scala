@@ -5,11 +5,11 @@ import akka.pattern.ask
 import akka.util.Timeout
 import akka.util.duration._
 
-class ProblemSolver[A <: problem.Problem](workers: Int, autoDie: Boolean) {
+class ProblemSolver[A <: problem.Problem](workers: Int, autoDie: Boolean, name: String) {
   /**
    * Bring up the actor system
    */
-  val system = ActorSystem("ChallengeSystem")
+  val system = ActorSystem("ChallengeSystem" + name)
   /**
    * This is the actor object responsible for managing the solver objects
    */

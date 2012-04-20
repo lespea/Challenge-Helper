@@ -69,7 +69,10 @@ case class ProblemMaster[A <: Problem](val workers: Int, selfTerminate: Boolean 
      */
 
     case ProcessResults ⇒
-      problems.dequeue.processResults(results)
+      problems.isEmpty match {
+        case true  ⇒ throw new RuntimeException("Tried processing a problem but the queue is empty!")
+        case false ⇒ problems.dequeue.processResults(results)
+      }
       self ! ProcessProblem
 
     case DoneProcessing ⇒ sender ! done

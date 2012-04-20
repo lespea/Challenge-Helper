@@ -6,16 +6,19 @@ import akka.actor._
 import problem._
 
 class BasicProblem extends WordSpec with ShouldMatchers {
-  def buildInfo(pInfo: List[Tuple3[Int, Int, Int]]) =
+  def buildInfo(pInfo: List[Tuple3[Int, Int, Int]]) = {
+    implicit val numGen = problem.NumGenerator.buildNumGenerator
+
     pInfo.foldLeft(
       new (List[AddProblem], Map[Int, String])(Nil, Map())){
         case ((pList, aMap), info) ⇒
-          val problem = AddProblem(info._1, info._2)
+          val problem = AddProblem(info._1, info._2, numGen())
           (problem :: pList,
             aMap + (problem.num -> info._3.toString))
       }
+  }
 
-  val solver = new ProblemSolver[AddProblem](10, false)
+  val solver = new ProblemSolver[AddProblem](10, false, "BasicProblem")
 
   val okProblemInfo = List(
     (1, 1, 2),
@@ -27,7 +30,6 @@ class BasicProblem extends WordSpec with ShouldMatchers {
   val badProblemInfo = okProblemInfo map { case (a, b, c) ⇒ (a, b, c + 1) }
 
   val (okProblems, okAnswers) = buildInfo(okProblemInfo)
-  NumGenerator.reset
   val (badProblems, badAnswers) = buildInfo(badProblemInfo)
 
   def okSolver = (sols: Iterable[SolvedProblem]) ⇒ sols foreach (sol ⇒

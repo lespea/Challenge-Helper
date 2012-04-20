@@ -7,7 +7,9 @@ package challenge.problem
  * whatever data it needs, and define the solve method which produces
  * the output stuck in the solved problem.
  */
-abstract class Problem(val num: Int = NumGenerator.getNum) {
+abstract class Problem() {
+  val num: Int
+
   /**
    * This must produce the answer to the problem
    */
@@ -16,7 +18,10 @@ abstract class Problem(val num: Int = NumGenerator.getNum) {
   /**
    * Returns a solved problem object using the solve method
    */
-  def getAnswer = SolvedProblem(num, solve)
+  def getAnswer = {
+    SolvedProblem(num, solve)
+  }
+
 }
 
 /**
