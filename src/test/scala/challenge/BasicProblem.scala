@@ -2,7 +2,6 @@ package challenge
 
 import org.scalatest.WordSpec
 import org.scalatest.matchers.ShouldMatchers
-import akka.actor._
 import problem._
 
 class BasicProblem extends WordSpec with ShouldMatchers {
@@ -10,12 +9,12 @@ class BasicProblem extends WordSpec with ShouldMatchers {
     implicit val numGen = problem.NumGenerator.buildNumGenerator
 
     pInfo.foldLeft(
-      new (List[AddProblem], Map[Int, String])(Nil, Map())){
-        case ((pList, aMap), info) ⇒
-          val problem = AddProblem(info._1, info._2)
-          (problem :: pList,
-            aMap + (problem.num -> info._3.toString))
-      }
+      new (List[AddProblem], Map[Int, String])(Nil, Map())) {
+      case ((pList, aMap), info) ⇒
+        val problem = AddProblem(info._1, info._2)
+        (problem :: pList,
+          aMap + (problem.num -> info._3.toString))
+    }
   }
 
   val solver = new ProblemSolver[AddProblem](10, false, "BasicProblem")
@@ -27,13 +26,15 @@ class BasicProblem extends WordSpec with ShouldMatchers {
     (123, 456, 579),
     (5, 6, 11))
 
-  val badProblemInfo = okProblemInfo map { case (a, b, c) ⇒ (a, b, c + 1) }
+  val badProblemInfo = okProblemInfo map {
+    case (a, b, c) ⇒ (a, b, c + 1)
+  }
 
   val (okProblems, okAnswers) = buildInfo(okProblemInfo)
   val (badProblems, badAnswers) = buildInfo(badProblemInfo)
 
   def okSolver = (sols: Iterable[SolvedProblem]) ⇒ sols foreach (sol ⇒
-    Some(sol.answer) should equal (okAnswers.get(sol.num)))
+    Some(sol.answer) should equal(okAnswers.get(sol.num)))
 
   def badSolver = (sols: Iterable[SolvedProblem]) ⇒ sols foreach (sol ⇒
     Some(sol.answer) should not equal (badAnswers.get(sol.num)))
@@ -44,14 +45,14 @@ class BasicProblem extends WordSpec with ShouldMatchers {
     "solve correctly" when {
       "the answer is correct" in {
         solver addInfo ProblemInfo(okProblems, okSolver)
-        solver solve
+        solver.solve
       }
 
       "the answer is incorrect" in {
         Thread.sleep(100)
         while (solver.isDone != true) Thread.sleep(100L)
         solver addInfo ProblemInfo(okProblems, okSolver)
-        solver solve
+        solver.solve
       }
     }
 
@@ -60,8 +61,8 @@ class BasicProblem extends WordSpec with ShouldMatchers {
       while (solver.isDone != true) Thread.sleep(100L)
       solver.shutdown
       Thread.sleep(100)
-      solver.master.isTerminated should be (true)
-      solver.system.isTerminated should be (true)
+      solver.master.isTerminated should be(true)
+      solver.system.isTerminated should be(true)
     }
   }
 }

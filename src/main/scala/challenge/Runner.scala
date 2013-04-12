@@ -1,13 +1,9 @@
 package challenge
 
-import akka.actor.Actor
 import scala.io.Source
 import grizzled.io.util.withCloseable
 import scala.collection.mutable.MutableList
-import akka.actor.ActorSystem
-import scala.sys.Prop
-import akka.actor.Props
-import java.io.{ BufferedWriter, FileOutputStream, OutputStreamWriter }
+import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter}
 
 /**
  * This is the main trait that you need to implement to setup the problem runner.
@@ -33,9 +29,10 @@ abstract class Runner[A <: problem.Problem] extends App {
     withCloseable(
       new BufferedWriter(
         new OutputStreamWriter(
-          new FileOutputStream(outFile), fileEncoding))) { buffOut ⇒
+          new FileOutputStream(outFile), fileEncoding))) {
+      buffOut ⇒
         buffOut.write(problems mkString "\n")
-      }
+    }
   }
 
   /* Generic Options */
@@ -78,6 +75,7 @@ abstract class Runner[A <: problem.Problem] extends App {
    * Default: false
    */
   val dynamicGrouping = false
+
   /**
    * If the groups have dynamic sizes, then one line will be read at the beginning of
    * each group and passed to this function.  It is responsible for returning an int
@@ -112,8 +110,8 @@ abstract class Runner[A <: problem.Problem] extends App {
    */
   def setupProblems =
     for (file ← files) {
-      withCloseable(Source.fromFile(file, fileEncoding)) { buffIn ⇒
-        {
+      withCloseable(Source.fromFile(file, fileEncoding)) {
+        buffIn ⇒ {
           // Setup the line iterator
           val lines = buffIn.getLines
 
@@ -142,7 +140,7 @@ abstract class Runner[A <: problem.Problem] extends App {
              */
             problems += linesToProblem(countLine match {
               case Some(line) ⇒ line +: groupLines
-              case _          ⇒ groupLines
+              case _ ⇒ groupLines
             })
           }
 
@@ -161,5 +159,5 @@ abstract class Runner[A <: problem.Problem] extends App {
    * Setup the problems and start the process
    */
   setupProblems
-  pSolver solve
+  pSolver.solve
 }

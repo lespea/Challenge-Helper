@@ -1,9 +1,10 @@
 package challenge
+
 import akka.actor._
-import akka.dispatch.Await
 import akka.pattern.ask
 import akka.util.Timeout
-import akka.util.duration._
+import scala.concurrent.Await
+import scala.concurrent.duration._
 
 class ProblemSolver[A <: problem.Problem](workers: Int, autoDie: Boolean, name: String) {
   /**
@@ -16,9 +17,11 @@ class ProblemSolver[A <: problem.Problem](workers: Int, autoDie: Boolean, name: 
   val master = system.actorOf(Props(ProblemMaster[A](workers, autoDie)), name = "problem_master")
 
   def addInfo(info: problem.ProblemInfo[A]) = master ! info
+
   def solve = master ! problem.ProcessProblem
 
-  implicit val timeout = Timeout(5 seconds)
+  implicit val timeout = Timeout(5.seconds)
+
   def isDone: Boolean = {
     val future = master ? problem.DoneProcessing
     Await.result(future, timeout.duration).asInstanceOf[Boolean]
