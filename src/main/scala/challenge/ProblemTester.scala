@@ -6,7 +6,7 @@ import challenge.problem.ProblemInfo
 import org.scalatest.concurrent.Conductors
 
 abstract class ProblemTester[A <: problem.Problem] extends WordSpec with ShouldMatchers with Conductors {
-  type problemAndSolution = Tuple2[A, String]
+  type problemAndSolution = (A, String)
 
   def makeDefaultProblems: List[problemAndSolution]
 
@@ -36,11 +36,11 @@ abstract class ProblemTester[A <: problem.Problem] extends WordSpec with ShouldM
 
   "A problem" should {
     thread("defaults") {
-      "solve the defauls correctly" in {
+      "solve the defaults correctly" in {
         solver addInfo ProblemInfo(defaultProblems map {
           _._1
         }, okSolver(buildAnswerMap(defaultProblems)))
-        solver.solve
+        solver.solve()
       }
     }
 
@@ -52,14 +52,14 @@ abstract class ProblemTester[A <: problem.Problem] extends WordSpec with ShouldM
             solver addInfo ProblemInfo(extraProblemsInfo map {
               _._1
             }, okSolver(buildAnswerMap(extraProblemsInfo)))
-            solver.solve
+            solver.solve()
           }
         case None ⇒
       }
     }
 
     whenFinished {
-      solver.shutdown
+      solver.shutdown()
     }
   }
 }

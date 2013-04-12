@@ -1,5 +1,4 @@
 package challenge
-import java.util.concurrent.atomic.AtomicBoolean
 
 class TestTester extends ProblemTester[AddProblem] {
   def makeDefaultProblems = {

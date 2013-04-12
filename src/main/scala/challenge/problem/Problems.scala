@@ -20,7 +20,7 @@ abstract class Problem(val num: Int) {
     SolvedProblem(num, solve)
   }
 
-  def this(numGen:() ⇒ Int) = this(numGen())
+  def this(numGen: () ⇒ Int) = this(numGen())
 }
 
 /**
@@ -28,7 +28,7 @@ abstract class Problem(val num: Int) {
  * toString should be compatible with Google's code jam output,
  * if you want to use that to create the output.
  */
-case class SolvedProblem(val num: Int, answer: String) {
+case class SolvedProblem(num: Int, answer: String) {
   /**
    * Case #%d: %s
    */
@@ -40,6 +40,5 @@ case class SolvedProblem(val num: Int, answer: String) {
  * answers once they are computed.
  */
 case class ProblemInfo[A <: Problem](
-  val problems: Seq[A],
-  val processResults: (Iterable[SolvedProblem]) ⇒ Unit)
-  
+                                      problems: Seq[A],
+                                      processResults: (Iterable[SolvedProblem]) ⇒ Unit)

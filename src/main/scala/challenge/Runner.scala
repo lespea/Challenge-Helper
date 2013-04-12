@@ -2,8 +2,8 @@ package challenge
 
 import scala.io.Source
 import grizzled.io.util.withCloseable
-import scala.collection.mutable.MutableList
 import java.io.{BufferedWriter, FileOutputStream, OutputStreamWriter}
+import scala.collection.mutable
 
 /**
  * This is the main trait that you need to implement to setup the problem runner.
@@ -19,7 +19,7 @@ abstract class Runner[A <: problem.Problem] extends App {
    * You must provide a function that takes a Seq of lines and turns it
    * into a Problem object.
    */
-  def linesToProblem(strs: Seq[String]): A
+  def linesToProblem(strings: Seq[String]): A
 
   /**
    * How to process the solved problems
@@ -108,33 +108,33 @@ abstract class Runner[A <: problem.Problem] extends App {
    * Main function that is run which loads all of the files, turns them into problem
    * objects, and sends them to the master actor system for solving.
    */
-  def setupProblems =
+  def setupProblems() {
     for (file ← files) {
       withCloseable(Source.fromFile(file, fileEncoding)) {
         buffIn ⇒ {
           // Setup the line iterator
-          val lines = buffIn.getLines
+          val lines = buffIn.getLines()
 
           // Get the problem count if required
-          val problemCount = if (firstLineTestCount) Some(lines.next.toInt) else None
+          val problemCount = if (firstLineTestCount) Some(lines.next().toInt) else None
 
           /*
            * Being functional is too tricky here because we may be parsing the lines
            * in dynamic chunks
            */
-          val problems: MutableList[A] = MutableList()
+          val problems: mutable.MutableList[A] = mutable.MutableList()
           while (lines.hasNext) {
             // Determine how to read the current problem's lines
             val (groupCount, countLine) =
               if (dynamicGrouping)
-                dynamicGroupParser(lines.next)
+                dynamicGroupParser(lines.next())
               else
                 (staticGroupCount, None)
 
-            // Get the lines for this problem 
+            // Get the lines for this problem
             val groupLines = lines.take(groupCount).toSeq
 
-            /* 
+            /*
              * Parse the lines we got into a problem, make sure we include the "dynamic group"
              * line if requested!
              */
@@ -154,10 +154,11 @@ abstract class Runner[A <: problem.Problem] extends App {
         }
       }
     }
+  }
 
   /*
    * Setup the problems and start the process
    */
-  setupProblems
-  pSolver.solve
+  setupProblems()
+  pSolver.solve()
 }

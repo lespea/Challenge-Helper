@@ -9,7 +9,7 @@ import scala.collection.mutable
  * Supervising actor that distributes the problems to the solvers, collects the
  * solutions, and processes the solved problems once they've all been computed.
  */
-case class ProblemMaster[A <: Problem](val workers: Int, selfTerminate: Boolean = true) extends Actor {
+case class ProblemMaster[A <: Problem](workers: Int, selfTerminate: Boolean = true) extends Actor {
   // Setup the router to distribute the problems 
   val router = context.actorOf(
     Props[Solver].withRouter(SmallestMailboxRouter(workers)),
@@ -35,7 +35,7 @@ case class ProblemMaster[A <: Problem](val workers: Int, selfTerminate: Boolean 
       // There are no more problems to solve so shut down
       case None ⇒
         done = true
-        if (selfTerminate) context.system.shutdown
+        if (selfTerminate) context.system.shutdown()
 
       /*
        * Send out the problems to the workers and re-initialize the expected
@@ -70,14 +70,14 @@ case class ProblemMaster[A <: Problem](val workers: Int, selfTerminate: Boolean 
 
     case ProcessResults ⇒
       problems.isEmpty match {
-        case true  ⇒ throw new RuntimeException("Tried processing a problem but the queue is empty!")
-        case false ⇒ problems.dequeue.processResults(results)
+        case true ⇒ throw new RuntimeException("Tried processing a problem but the queue is empty!")
+        case false ⇒ problems.dequeue().processResults(results)
       }
       self ! ProcessProblem
 
     case DoneProcessing ⇒ sender ! done
 
     // Should never happen
-    case huh            ⇒ throw new RuntimeException("Unknown message sent" + huh)
+    case huh ⇒ throw new RuntimeException("Unknown message sent" + huh)
   }
 }

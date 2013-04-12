@@ -10,6 +10,6 @@ case class Solver() extends Actor {
 
   def receive = {
     case problem: Problem ⇒ sender ! solveProblem(problem)
-    case huh              ⇒ throw new RuntimeException("Unknown message sent" + huh)
+    case huh ⇒ throw new RuntimeException("Unknown message sent" + huh)
   }
 }
