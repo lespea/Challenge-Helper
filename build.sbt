@@ -4,25 +4,21 @@ name := "challegeHelper"
 
 version := "0.1-SNAPSHOT"
 
-scalaVersion := "2.9.1"
-//scalaVersion := "2.9.1-1"
+scalaVersion := "2.10.1"
 
 scalacOptions ++= Seq("-optimise", "-unchecked", "-deprecation")
 
-//crossScalaVersions := Seq("2.9.1", "2.9.1-1")
+libraryDependencies ++= {
+  Seq(
+    "com.typesafe"      %% "scalalogging-slf4j" % "1.0.1",
+    "com.typesafe.akka" %% "akka-actor"         % "2.1.2",
+    "org.clapper"       %% "grizzled-scala"     % "1.1.3",
+    "org.scalatest"     %% "scalatest"          % "1.9.1",
+    "commons-io"         % "commons-io"         % "2.4",
+    "commons-codec"      % "commons-codec"      % "1.7",
+    "commons-net"        % "commons-net"        % "3.2",
+    "joda-time"          % "joda-time"          % "2.2"
+  )
+}
 
-
-resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
-
-
-libraryDependencies += "org.scalaz" % "scalaz-core_2.9.1" % "6.0.4"
-
-libraryDependencies += "org.scalatest" %% "scalatest" % "1.7.1"
-
-libraryDependencies += "com.typesafe.akka" % "akka-actor" % "2.0.1"
-
-libraryDependencies += "org.scala-tools" %% "scala-stm" % "0.5"
-
-libraryDependencies += "joda-time" % "joda-time" % "2.1"
-
-libraryDependencies += "org.clapper" %% "grizzled-scala" % "1.0.12"
+//"org.scalaz"         % "scalaz-core_2.9.1" % "6.0.4",
