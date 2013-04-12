@@ -13,6 +13,7 @@ libraryDependencies ++= {
     "com.typesafe"      %% "scalalogging-slf4j" % "1.0.1",
     "com.typesafe.akka" %% "akka-actor"         % "2.1.2",
     "org.clapper"       %% "grizzled-scala"     % "1.1.3",
+    "org.scala-stm"     %% "scala-stm"          % "0.7",
     "org.scalatest"     %% "scalatest"          % "1.9.1",
     "commons-io"         % "commons-io"         % "2.4",
     "commons-codec"      % "commons-codec"      % "1.7",
